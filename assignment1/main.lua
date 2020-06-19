@@ -38,7 +38,6 @@ require 'states/CountdownState'
 require 'states/PlayState'
 require 'states/ScoreState'
 require 'states/TitleScreenState'
-require 'states/PauseState'
 
 require 'Bird'
 require 'Pipe'
@@ -109,8 +108,7 @@ function love.load()
         ['title'] = function() return TitleScreenState() end,
         ['countdown'] = function() return CountdownState() end,
         ['play'] = function() return PlayState() end,
-        ['score'] = function() return ScoreState() end,
-        ['pause'] = function() return PauseState() end
+        ['score'] = function() return ScoreState() end
     }
     gStateMachine:change('title')
 
@@ -169,9 +167,11 @@ function love.update(dt)
     -- pause game at keypress: 'p'
     if love.keyboard.wasPressed('p') and scrolling == true then
         scrolling = false
+    -- resume game at second keypress: 'p'
     elseif love.keyboard.wasPressed('p') and scrolling == false then
         scrolling = true
     end
+
     love.keyboard.keysPressed = {}
     love.mouse.buttonsPressed = {}
 end
