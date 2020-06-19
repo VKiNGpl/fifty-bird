@@ -29,14 +29,14 @@ end
 
 function PlayState:update(dt)
     -- update timer for pipe spawning
-    self.timer = self.timer + dt
+    self.timer = self.timer + dt + math.random(-5, 5) / 170
 
     -- spawn a new pipe pair every second and a half
     if self.timer > 2 then
         -- modify the last Y coordinate we placed so pipe gaps aren't too far apart
         -- no higher than 10 pixels below the top edge of the screen,
         -- and no lower than a gap length (90 pixels) from the bottom
-        local y = math.max(-PIPE_HEIGHT + 25, 
+        local y = math.max(-PIPE_HEIGHT + 20, 
             math.min(self.lastY + math.random(-20, 20), VIRTUAL_HEIGHT - 90 - PIPE_HEIGHT))
         self.lastY = y
 
@@ -108,8 +108,13 @@ function PlayState:render()
 
     love.graphics.setFont(flappyFont)
     love.graphics.print('Score: ' .. tostring(self.score), 8, 8)
-
+    
     self.bird:render()
+
+    if scrolling == false then
+        love.graphics.setFont(hugeFont)
+        love.graphics.printf('GAME PAUSED', 0, 100, VIRTUAL_WIDTH, 'center')
+    end
 end
 
 --[[
@@ -124,6 +129,6 @@ end
     Called when this state changes to another state.
 ]]
 function PlayState:exit()
-    -- stop scrolling for the death/score screen
-    scrolling = false
+    -- keep scrolling for the death/score screen
+    scrolling = true
 end

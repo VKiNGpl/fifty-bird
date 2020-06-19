@@ -38,10 +38,12 @@ require 'states/CountdownState'
 require 'states/PlayState'
 require 'states/ScoreState'
 require 'states/TitleScreenState'
+require 'states/PauseState'
 
 require 'Bird'
 require 'Pipe'
 require 'PipePair'
+require 'Cup'
 
 -- physical screen dimensions
 WINDOW_WIDTH = 1280
@@ -56,6 +58,7 @@ local backgroundScroll = 0
 
 local ground = love.graphics.newImage('ground.png')
 local groundScroll = 0
+scrolling = true
 
 local BACKGROUND_SCROLL_SPEED = 30
 local GROUND_SCROLL_SPEED = 60
@@ -106,7 +109,8 @@ function love.load()
         ['title'] = function() return TitleScreenState() end,
         ['countdown'] = function() return CountdownState() end,
         ['play'] = function() return PlayState() end,
-        ['score'] = function() return ScoreState() end
+        ['score'] = function() return ScoreState() end,
+        ['pause'] = function() return PauseState() end
     }
     gStateMachine:change('title')
 
@@ -154,12 +158,20 @@ function love.mouse.wasPressed(button)
 end
 
 function love.update(dt)
-    -- scroll our background and ground, looping back to 0 after a certain amount
-    backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT
-    groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
+    if scrolling == true then
+        -- scroll our background and ground, looping back to 0 after a certain amount
+        backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POINT
+        groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
 
-    gStateMachine:update(dt)
+        gStateMachine:update(dt)
+    end
 
+    -- pause game at keypress: 'p'
+    if love.keyboard.wasPressed('p') and scrolling == true then
+        scrolling = false
+    elseif love.keyboard.wasPressed('p') and scrolling == false then
+        scrolling = true
+    end
     love.keyboard.keysPressed = {}
     love.mouse.buttonsPressed = {}
 end
