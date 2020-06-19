@@ -87,6 +87,7 @@ function love.load()
         ['explosion'] = love.audio.newSource('explosion.wav', 'static'),
         ['hurt'] = love.audio.newSource('hurt.wav', 'static'),
         ['score'] = love.audio.newSource('score.wav', 'static'),
+        ['pause'] = love.audio.newSource('pause.wav', 'static'),
 
         -- https://freesound.org/people/xsgianni/sounds/388079/
         ['music'] = love.audio.newSource('marios_way.mp3', 'static')
@@ -166,10 +167,13 @@ function love.update(dt)
 
     -- pause game at keypress: 'p'
     if love.keyboard.wasPressed('p') and scrolling == true then
+        sounds['music']:pause()
+        sounds['pause']:play()
         scrolling = false
     -- resume game at second keypress: 'p'
     elseif love.keyboard.wasPressed('p') and scrolling == false then
         scrolling = true
+        sounds['music']:play()
     end
 
     love.keyboard.keysPressed = {}
