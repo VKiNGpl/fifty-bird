@@ -65,9 +65,11 @@ function love.load()
     -- initialize our nearest-neighbor filter
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
+    math.randomseed(os.time() % 100)
+
     -- app window title
     love.window.setTitle('Fifty Bird')
-
+    
     -- initialize our virtual resolution
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         vsync = true,
